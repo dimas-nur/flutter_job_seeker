@@ -10,7 +10,10 @@ class AppTheme {
     return theme.copyWith(
       colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
       backgroundColor: AppColors.white,
-      textTheme: GoogleFonts.dmSansTextTheme(),
+      textTheme: GoogleFonts.dmSansTextTheme().apply(
+        bodyColor: AppColors.primaryDark,
+        displayColor: AppColors.primaryDark,
+      ),
     );
   }
 }

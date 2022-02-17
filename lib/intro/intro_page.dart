@@ -14,26 +14,65 @@ class _IntroPageState extends State<IntroPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            flex: 6,
-            child: _illustration(),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return constraints.maxWidth > 600 || constraints.maxHeight > 1080
+              ? _bodyWeb()
+              : _bodyMobile();
+        },
+      ),
+    );
+  }
+
+  Widget _bodyMobile() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          flex: 6,
+          child: _illustration(),
+        ),
+        const Spacer(),
+        Expanded(
+          flex: 6,
+          child: _introText(),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(24),
+          child: CustomPrimaryButton(
+            onPressed: () {},
+            text: 'Get Started',
           ),
-          const Spacer(),
-          Expanded(
-            flex: 6,
-            child: _introText(),
+        ),
+      ],
+    );
+  }
+
+  Widget _bodyWeb() {
+    return Container(
+      color: AppColors.primary,
+      child: Center(
+        child: Container(
+          margin: const EdgeInsets.all(32),
+          decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.blueSoft.withOpacity(0.2),
+                  offset: const Offset(0, 16),
+                  blurRadius: 40,
+                )
+              ]),
+          constraints: const BoxConstraints(
+            maxWidth: 600,
+            maxHeight: 1080,
           ),
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: CustomPrimaryButton(
-              onPressed: () {},
-              text: 'Get Started',
-            ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: _bodyMobile(),
           ),
-        ],
+        ),
       ),
     );
   }
