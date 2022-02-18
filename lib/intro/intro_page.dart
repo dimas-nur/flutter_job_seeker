@@ -14,6 +14,7 @@ class _IntroPageState extends State<IntroPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.white,
       body: LayoutBuilder(
         builder: (context, constraints) {
           return constraints.maxWidth > 600 || constraints.maxHeight > 1080
@@ -49,11 +50,15 @@ class _IntroPageState extends State<IntroPage> {
   }
 
   Widget _bodyWeb() {
+    final paddingSafeArea = MediaQuery.of(context).padding.top;
+
     return Container(
       color: AppColors.primary,
       child: Center(
         child: Container(
-          margin: const EdgeInsets.all(32),
+          margin: paddingSafeArea > 32
+              ? EdgeInsets.fromLTRB(32, paddingSafeArea + 32, 32, 32)
+              : const EdgeInsets.all(32),
           decoration: BoxDecoration(
               color: AppColors.white,
               borderRadius: BorderRadius.circular(24),
