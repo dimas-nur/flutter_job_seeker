@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_job_seeker/home/presentation/page/home_page.dart';
 import 'package:flutter_job_seeker/intro/intro_page.dart';
 
 import 'core/constant/theme.dart';
@@ -12,11 +14,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarBrightness: Brightness.dark,
+        statusBarIconBrightness: Brightness.dark,
+      ),
+    );
+
     return MaterialApp(
       title: 'Job Seeker',
       theme: AppTheme.of(context),
       debugShowCheckedModeBanner: false,
-      home: const IntroPage(),
+      home: const HomePage(),
     );
   }
 }
