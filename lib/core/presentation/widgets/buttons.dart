@@ -32,3 +32,47 @@ class CustomPrimaryButton extends StatelessWidget {
     );
   }
 }
+
+class CustomIconButton extends StatelessWidget {
+  final VoidCallback onTap;
+  final Widget icon;
+  final double width;
+  final double height;
+  final Color backgroundColor;
+  final BorderRadius? borderRadius;
+
+  const CustomIconButton({
+    Key? key,
+    required this.onTap,
+    required this.icon,
+    this.width = 32,
+    this.height = 32,
+    this.backgroundColor = AppColors.white,
+    this.borderRadius,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: borderRadius ?? BorderRadius.circular(10),
+        boxShadow: [
+          AppProperties.shadow,
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: borderRadius ?? BorderRadius.circular(10),
+          child: Center(
+            child: icon,
+          ),
+        ),
+      ),
+    );
+  }
+}

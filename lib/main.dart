@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_job_seeker/home/presentation/page/home_page.dart';
-import 'package:flutter_job_seeker/intro/intro_page.dart';
 
 import 'core/constant/theme.dart';
+import 'home/home.dart';
 
 void main() {
   runApp(const MyApp());

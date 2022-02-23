@@ -11,16 +11,22 @@ class IntroPage extends StatefulWidget {
 }
 
 class _IntroPageState extends State<IntroPage> {
+  late ThemeData theme;
+
   @override
   Widget build(BuildContext context) {
+    theme = Theme.of(context);
+
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return constraints.maxWidth > 600 || constraints.maxHeight > 1080
-              ? _bodyWeb()
-              : _bodyMobile();
-        },
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return constraints.maxWidth > 600 || constraints.maxHeight > 1080
+                ? _bodyWeb()
+                : _bodyMobile();
+          },
+        ),
       ),
     );
   }
@@ -111,9 +117,9 @@ class _IntroPageState extends State<IntroPage> {
           Flexible(
             child: Text(
               AppStrings.introTitle,
-              style: Theme.of(context).textTheme.headline5?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: theme.textTheme.headline5?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
             ),
@@ -124,7 +130,7 @@ class _IntroPageState extends State<IntroPage> {
           Flexible(
             child: Text(
               AppStrings.introDescription,
-              style: Theme.of(context).textTheme.subtitle1,
+              style: theme.textTheme.subtitle1,
               overflow: TextOverflow.ellipsis,
               maxLines: 4,
             ),
