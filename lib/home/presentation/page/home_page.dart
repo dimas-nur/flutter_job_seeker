@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_job_seeker/core/data/entities/job_entity.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../core/constant/constant.dart';
+import '../../../core/data/data.dart';
 import '../../../core/presentation/widgets/widgets.dart';
 import '../presentation.dart';
 
@@ -13,11 +15,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late ThemeData theme;
+  late ThemeData _theme;
+
+  late final List<JobEntity> _jobs;
+  late final List<JobEntity> _popularJobs;
+
+  @override
+  void initState() {
+    _jobs = JobEntity.jobs..shuffle();
+    _popularJobs = JobEntity.jobs
+        .where(
+          (element) => element.isPopular,
+        )
+        .toList()
+      ..shuffle();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    theme = Theme.of(context);
+    _theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -88,7 +106,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Text(
             'Hello Dimas!',
-            style: theme.textTheme.bodyText1?.copyWith(
+            style: _theme.textTheme.bodyText1?.copyWith(
               fontSize: 18,
             ),
           ),
@@ -97,7 +115,7 @@ class _HomePageState extends State<HomePage> {
           ),
           Text(
             AppStrings.homeGreeting,
-            style: theme.textTheme.headline5?.copyWith(
+            style: _theme.textTheme.headline5?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -176,7 +194,7 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Text(
             AppStrings.homePopularJob,
-            style: theme.textTheme.headline6?.copyWith(
+            style: _theme.textTheme.headline6?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -191,14 +209,18 @@ class _HomePageState extends State<HomePage> {
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              return const ItemJobPopular();
+              final job = _popularJobs[index];
+
+              return ItemJobPopular(
+                job: job,
+              );
             },
             separatorBuilder: (context, index) {
               return const SizedBox(
                 width: 16,
               );
             },
-            itemCount: 5,
+            itemCount: _popularJobs.length,
           ),
         ),
       ],
@@ -214,13 +236,13 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Text(
             AppStrings.homeRecommendationJob,
-            style: theme.textTheme.headline6?.copyWith(
+            style: _theme.textTheme.headline6?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
         GridView.builder(
-          itemCount: 20,
+          itemCount: _jobs.length,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
@@ -231,104 +253,13 @@ class _HomePageState extends State<HomePage> {
             mainAxisExtent: 124,
           ),
           itemBuilder: (context, index) {
-            return const ItemJob();
+            final job = _jobs[index];
+
+            return ItemJob(
+              job: job,
+            );
           },
         ),
-        /* SizedBox(
-          height: 142,
-          child: ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) {
-              return CustomPrimaryCard(
-                height: 142,
-                width: 252,
-                borderRadius: BorderRadius.circular(14),
-                onTap: () {},
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(6),
-                            child: Image.asset(
-                              AppImages.imgGojek,
-                              height: 32,
-                              width: 32,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 8,
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Text(
-                                  'Tokopedia',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  'Onsite',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      const Text(
-                        'Senior Graphic Designer',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 2,
-                      ),
-                      const Text(
-                        'Design Agency • Jakarta, Id ',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-            separatorBuilder: (context, index) {
-              return const SizedBox(
-                width: 16,
-              );
-            },
-            itemCount: 5,
-          ),
-        ), */
       ],
     );
   }

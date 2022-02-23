@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_job_seeker/core/data/entities/job_category_entity.dart';
 
 class ItemJobCategory extends StatelessWidget {
-  const ItemJobCategory({Key? key}) : super(key: key);
+  final JobCategoryEntity jobCategory;
+
+  const ItemJobCategory({
+    Key? key,
+    required this.jobCategory,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +18,9 @@ class ItemJobCategory extends StatelessWidget {
           borderRadius: BorderRadius.circular(6),
         ),
       ),
-      child: Text('Full Time'),
+      child: Text(
+        jobCategory.name,
+      ),
     );
   }
 }
