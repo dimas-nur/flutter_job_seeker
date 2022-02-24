@@ -5,17 +5,19 @@ import '../../../core/core.dart';
 
 class ItemJob extends StatelessWidget {
   final JobEntity job;
+  final VoidCallback onTap;
 
   const ItemJob({
     Key? key,
     required this.job,
+    required this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return CustomPrimaryCard(
       borderRadius: BorderRadius.circular(14),
-      onTap: () {},
+      onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -27,30 +29,10 @@ class ItemJob extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(6),
-                  child: Image.network(
+                  child: CustomImageNetwork(
                     job.company.logo,
                     height: 32,
                     width: 32,
-                    fit: BoxFit.cover,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-
-                      return const SizedBox(
-                        height: 32,
-                        width: 32,
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      return Image.asset(
-                        AppImages.imgPlaceholder,
-                        height: 32,
-                        width: 32,
-                        fit: BoxFit.cover,
-                      );
-                    },
                   ),
                 ),
                 const SizedBox(

@@ -14,12 +14,15 @@ class AppIcons {
   static const icSearch = '$_icons/ic_search.svg';
   static const icFilter = '$_icons/ic_filter.svg';
   static const icLocation = '$_icons/ic_location.svg';
+  static const icBackArrow = '$_icons/ic_back_arrow.svg';
+  static const icBookmark = '$_icons/ic_bookmark.svg';
 }
 
 class AppImages {
   static const _images = '$_assets/images';
 
   static const imgPlaceholder = '$_images/img_placeholder.png';
+  static const imgDevelopment = '$_images/img_development.png';
   static const imgGojek = '$_images/logo_gojek.jpg';
 }
 

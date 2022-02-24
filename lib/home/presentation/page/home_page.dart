@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_job_seeker/core/data/entities/job_entity.dart';
+import 'package:flutter_job_seeker/detail/presentation/pages/detail_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../core/constant/constant.dart';
@@ -213,6 +214,18 @@ class _HomePageState extends State<HomePage> {
 
               return ItemJobPopular(
                 job: job,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return DetailPage(
+                          job: job,
+                        );
+                      },
+                    ),
+                  );
+                },
               );
             },
             separatorBuilder: (context, index) {
@@ -257,6 +270,18 @@ class _HomePageState extends State<HomePage> {
 
             return ItemJob(
               job: job,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return DetailPage(
+                        job: job,
+                      );
+                    },
+                  ),
+                );
+              },
             );
           },
         ),

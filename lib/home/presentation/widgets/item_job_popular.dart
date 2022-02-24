@@ -5,10 +5,12 @@ import '../../../core/core.dart';
 
 class ItemJobPopular extends StatelessWidget {
   final JobEntity job;
+  final VoidCallback onTap;
 
   const ItemJobPopular({
     Key? key,
     required this.job,
+    required this.onTap,
   }) : super(key: key);
 
   @override
@@ -22,7 +24,7 @@ class ItemJobPopular extends StatelessWidget {
       height: 180,
       width: 248,
       borderRadius: BorderRadius.circular(14),
-      onTap: () {},
+      onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -37,30 +39,10 @@ class ItemJobPopular extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
+                      child: CustomImageNetwork(
                         job.company.logo,
                         height: 48,
                         width: 48,
-                        fit: BoxFit.cover,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-
-                          return const SizedBox(
-                            height: 48,
-                            width: 48,
-                            child: Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
-                        },
-                        errorBuilder: (context, error, stackTrace) {
-                          return Image.asset(
-                            AppImages.imgPlaceholder,
-                            height: 48,
-                            width: 48,
-                            fit: BoxFit.cover,
-                          );
-                        },
                       ),
                     ),
                     const SizedBox(

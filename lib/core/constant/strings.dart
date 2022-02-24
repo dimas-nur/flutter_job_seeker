@@ -9,4 +9,7 @@ class AppStrings {
   static const homeSearchHint = 'Search your dream job';
   static const homePopularJob = 'Popular Job';
   static const homeRecommendationJob = 'Recommendation Job';
+
+  /* Detail Page */
+  static const detailTittle = 'Job detail';
 }
