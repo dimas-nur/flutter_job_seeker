@@ -21,35 +21,6 @@ class _DetailCompanyScreenState extends State<DetailCompanyScreen> {
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
 
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Image.asset(
-            AppImages.imgDevelopment,
-            width: 124,
-            height: 124,
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          Text(
-            'Opps!',
-            style: _theme.textTheme.headline5?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          Text(
-            'Under Construction',
-            style: _theme.textTheme.bodyText1?.copyWith(
-              fontSize: 18,
-            ),
-          ),
-        ],
-      ),
-    );
+    return const UnderDevelopmentScreen();
   }
 }

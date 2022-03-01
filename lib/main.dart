@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_job_seeker/intro/intro.dart';
 
 import 'core/constant/theme.dart';
 import 'home/home.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
       title: 'Job Seeker',
       theme: AppTheme.of(context),
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      home: const IntroPage(),
     );
   }
 }

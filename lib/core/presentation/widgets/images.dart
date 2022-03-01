@@ -27,8 +27,16 @@ class CustomImageNetwork extends StatelessWidget {
         return SizedBox(
           width: width,
           height: height,
-          child: const Center(
-            child: CircularProgressIndicator(),
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.blueSoft.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            padding: EdgeInsets.all(height < 40 ? 8 : 16),
+            child: Center(
+              child:
+                  CircularProgressIndicator(strokeWidth: height < 40 ? 2 : 4),
+            ),
           ),
         );
       },

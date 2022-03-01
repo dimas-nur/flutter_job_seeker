@@ -4,10 +4,16 @@ class AppIllustrations {
   static const _illustrations = '$_assets/illustrations';
 
   static const illIntro = '$_illustrations/ill_intro_mobile.svg';
+  static const illDevelopment = '$_illustrations/ill_development.svg';
 }
 
 class AppIcons {
   static const _icons = '$_assets/icons';
+
+  static const icMenuHome = '$_icons/ic_menu_home.svg';
+  static const icMenuBookmark = '$_icons/ic_menu_bookmark.svg';
+  static const icMenuMessage = '$_icons/ic_menu_message.svg';
+  static const icMenuProfile = '$_icons/ic_menu_profile.svg';
 
   static const icCategory = '$_icons/ic_category.svg';
   static const icNotification = '$_icons/ic_notification.svg';
@@ -22,7 +28,6 @@ class AppImages {
   static const _images = '$_assets/images';
 
   static const imgPlaceholder = '$_images/img_placeholder.png';
-  static const imgDevelopment = '$_images/img_development.png';
   static const imgGojek = '$_images/logo_gojek.jpg';
 }
 

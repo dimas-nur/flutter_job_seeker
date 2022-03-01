@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_job_seeker/home/home.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../core/core.dart';
@@ -47,7 +48,17 @@ class _IntroPageState extends State<IntroPage> {
         Padding(
           padding: const EdgeInsets.all(24),
           child: CustomPrimaryButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const HomeBasePage();
+                  },
+                ),
+                (route) => false,
+              );
+            },
             text: 'Get Started',
           ),
         ),
