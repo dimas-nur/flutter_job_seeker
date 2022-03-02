@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_job_seeker/bookmark/bookmark_page.dart';
 import 'package:flutter_job_seeker/core/core.dart';
 import 'package:flutter_job_seeker/home/presentation/page/home_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -45,7 +46,7 @@ class _HomeBasePageState extends State<HomeBasePage>
               controller: _pageController,
               children: const [
                 HomePage(),
-                UnderDevelopmentScreen(),
+                BookmarkPage(),
                 UnderDevelopmentScreen(),
                 UnderDevelopmentScreen(),
               ],

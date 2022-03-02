@@ -5,6 +5,7 @@ class AppIllustrations {
 
   static const illIntro = '$_illustrations/ill_intro_mobile.svg';
   static const illDevelopment = '$_illustrations/ill_development.svg';
+  static const illResult = '$_illustrations/ill_result.svg';
 }
 
 class AppIcons {

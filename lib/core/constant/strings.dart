@@ -13,9 +13,18 @@ class AppStrings {
   /* Detail Page */
   static const detailTittle = 'Job detail';
 
-  /* Under Development Screen */
+  /* Bookmark Page */
+  static const bookmarkTittle = 'Bookmark';
+
+  /* Placeholder */
   static const underDevelopmentTitle = 'Opps!';
   static const underDevelopmentDescription = 'Under Construction';
+  static const emptyResultTitle = 'Opps!';
+  static const emptyResultDescription =
+      'We couldn’t find results for your search';
+  static const emptyBookmarkTitle = 'Add Bookmarks';
+  static const emptyBookmarkDescription =
+      "Don't forget to bookmark the jobs you like the most, so that you can find those easily over there.";
 
   /* Other */
   static const dialogUnderDevelopment =

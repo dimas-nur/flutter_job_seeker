@@ -115,7 +115,8 @@ class _DetailPageState extends State<DetailPage>
                 Provider.of<JobProvider>(context, listen: false)
                     .bookmark(widget.jobId);
               },
-              backgroundColor: jobEntity.isBookmarked ? Colors.redAccent : null,
+              backgroundColor:
+                  jobEntity.isBookmarked ? AppColors.primary : null,
               icon: SvgPicture.asset(
                 AppIcons.icBookmark,
                 width: 24,

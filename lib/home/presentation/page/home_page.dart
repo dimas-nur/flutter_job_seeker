@@ -392,39 +392,87 @@ class _HomePageState extends State<HomePage> {
           },
         ).toList();
 
-        return SliverPadding(
-          padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
-          sliver: SliverGrid(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final job = _jobs[index];
+        if (_jobs.isNotEmpty) {
+          return SliverPadding(
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+            sliver: SliverGrid(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final job = _jobs[index];
 
-                return ItemJobPopular(
-                  job: job,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return DetailPage(
-                            jobId: job.id,
-                          );
-                        },
+                  return ItemJobPopular(
+                    job: job,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return DetailPage(
+                              jobId: job.id,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
+                childCount: _jobs.length,
+              ),
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 400,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                mainAxisExtent: 148,
+              ),
+            ),
+          );
+        } else {
+          return SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(36),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: SvgPicture.asset(
+                        AppIllustrations.illResult,
+                        // width: 124,
+                        height: 124,
+                        color: AppColors.grey,
                       ),
-                    );
-                  },
-                );
-              },
-              childCount: _jobs.length,
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Flexible(
+                      child: Text(
+                        AppStrings.emptyResultTitle,
+                        style: _theme.textTheme.headline5?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.grey,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Flexible(
+                      child: Text(
+                        AppStrings.emptyResultDescription,
+                        style: _theme.textTheme.bodyText1?.copyWith(
+                          fontSize: 18,
+                          color: AppColors.grey,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 400,
-              mainAxisSpacing: 16,
-              crossAxisSpacing: 16,
-              mainAxisExtent: 148,
-            ),
-          ),
-        );
+          );
+        }
       },
     );
   }
