@@ -51,10 +51,4 @@ class JobCategoryEntity extends Equatable {
     id: 6,
     name: 'Senior',
   );
-
-  // Others
-  static const anywhere = JobCategoryEntity(
-    id: 7,
-    name: 'Anywhere',
-  );
 }

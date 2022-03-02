@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_job_seeker/intro/intro.dart';
+import 'package:provider/provider.dart';
 
 import 'core/constant/theme.dart';
-import 'home/home.dart';
+import 'core/presentation/provider/job_provider.dart';
+import 'intro/intro.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,11 +23,14 @@ class MyApp extends StatelessWidget {
       ),
     );
 
-    return MaterialApp(
-      title: 'Job Seeker',
-      theme: AppTheme.of(context),
-      debugShowCheckedModeBanner: false,
-      home: const IntroPage(),
+    return ChangeNotifierProvider<JobProvider>(
+      create: (context) => JobProvider(),
+      child: MaterialApp(
+        title: 'Job Seeker',
+        theme: AppTheme.of(context),
+        debugShowCheckedModeBanner: false,
+        home: const IntroPage(),
+      ),
     );
   }
 }

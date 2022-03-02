@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_job_seeker/core/core.dart';
-import 'package:flutter_job_seeker/core/data/entities/job_entity.dart';
-import 'package:flutter_job_seeker/detail/presentation/pages/detail_page.dart';
+import 'package:flutter_job_seeker/core/presentation/provider/job_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/constant/constant.dart';
+import '../../../core/core.dart';
 import '../../../core/data/data.dart';
+import '../../../core/data/entities/job_entity.dart';
 import '../../../core/presentation/widgets/widgets.dart';
+import '../../../detail/presentation/pages/detail_page.dart';
 import '../presentation.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,22 +20,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late ThemeData _theme;
-
-  late final List<JobEntity> _jobs;
-  late final List<JobEntity> _popularJobs;
-
-  @override
-  void initState() {
-    _jobs = JobEntity.jobs..shuffle();
-    _popularJobs = JobEntity.jobs
-        .where(
-          (element) => element.isPopular,
-        )
-        .toList()
-      ..shuffle();
-
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -245,41 +231,51 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-        SizedBox(
-          height: 180,
-          child: ListView.separated(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24,
-              vertical: 16,
-            ),
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              final job = _popularJobs[index];
+        Consumer<JobProvider>(
+          builder: (context, value, child) {
+            final _popularJobs = value.jobs
+                .where(
+                  (element) => element.isPopular,
+                )
+                .toList();
 
-              return ItemJobPopular(
-                job: job,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return DetailPage(
-                          job: job,
-                        );
-                      },
-                    ),
+            return SizedBox(
+              height: 180,
+              child: ListView.separated(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 16,
+                ),
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  final job = _popularJobs[index];
+
+                  return ItemJobPopular(
+                    job: job,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return DetailPage(
+                              job: job,
+                            );
+                          },
+                        ),
+                      );
+                    },
                   );
                 },
-              );
-            },
-            separatorBuilder: (context, index) {
-              return const SizedBox(
-                width: 16,
-              );
-            },
-            itemCount: _popularJobs.length,
-          ),
+                separatorBuilder: (context, index) {
+                  return const SizedBox(
+                    width: 16,
+                  );
+                },
+                itemCount: _popularJobs.length,
+              ),
+            );
+          },
         ),
       ],
     );
@@ -299,32 +295,42 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-        GridView.builder(
-          itemCount: _jobs.length,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 236,
-            mainAxisSpacing: 16,
-            crossAxisSpacing: 16,
-            mainAxisExtent: 124,
-          ),
-          itemBuilder: (context, index) {
-            final job = _jobs[index];
+        Consumer<JobProvider>(
+          builder: (context, value, child) {
+            final _jobs = value.jobs
+                .where(
+                  (element) => !element.isPopular,
+                )
+                .toList();
 
-            return ItemJob(
-              job: job,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return DetailPage(
-                        job: job,
-                      );
-                    },
-                  ),
+            return GridView.builder(
+              itemCount: _jobs.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 236,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                mainAxisExtent: 124,
+              ),
+              itemBuilder: (context, index) {
+                final job = _jobs[index];
+
+                return ItemJob(
+                  job: job,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return DetailPage(
+                            job: job,
+                          );
+                        },
+                      ),
+                    );
+                  },
                 );
               },
             );

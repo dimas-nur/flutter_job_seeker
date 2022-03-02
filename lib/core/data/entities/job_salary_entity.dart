@@ -35,12 +35,17 @@ class JobSalaryEntity extends Equatable {
   }
 
   static const dummyJunior = JobSalaryEntity(
-    minSalary: 50,
-    maxSalary: 70,
+    minSalary: 60,
+    maxSalary: 80,
   );
 
   static const dummySenior = JobSalaryEntity(
-    minSalary: 70,
+    minSalary: 80,
+    maxSalary: 100,
+  );
+
+  static const dummyGeneral = JobSalaryEntity(
+    minSalary: 60,
     maxSalary: 100,
   );
 }
