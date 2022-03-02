@@ -259,7 +259,7 @@ class _HomePageState extends State<HomePage> {
                         MaterialPageRoute(
                           builder: (context) {
                             return DetailPage(
-                              job: job,
+                              jobId: job.id,
                             );
                           },
                         ),
@@ -325,7 +325,7 @@ class _HomePageState extends State<HomePage> {
                       MaterialPageRoute(
                         builder: (context) {
                           return DetailPage(
-                            job: job,
+                            jobId: job.id,
                           );
                         },
                       ),

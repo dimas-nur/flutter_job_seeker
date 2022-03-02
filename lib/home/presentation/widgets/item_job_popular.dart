@@ -18,6 +18,7 @@ class ItemJobPopular extends StatelessWidget {
     final List<JobCategoryEntity> jobCategories = [
       job.timeStatus,
       job.locationStatus,
+      ...job.categories,
     ];
 
     return CustomPrimaryCard(

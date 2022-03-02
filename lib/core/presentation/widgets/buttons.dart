@@ -38,7 +38,7 @@ class CustomIconButton extends StatelessWidget {
   final Widget icon;
   final double width;
   final double height;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final BorderRadius? borderRadius;
 
   const CustomIconButton({
@@ -47,7 +47,7 @@ class CustomIconButton extends StatelessWidget {
     required this.icon,
     this.width = 32,
     this.height = 32,
-    this.backgroundColor = AppColors.white,
+    this.backgroundColor,
     this.borderRadius,
   }) : super(key: key);
 
@@ -57,7 +57,7 @@ class CustomIconButton extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: backgroundColor ?? AppColors.white,
         borderRadius: borderRadius ?? BorderRadius.circular(10),
         boxShadow: [
           AppProperties.shadow,

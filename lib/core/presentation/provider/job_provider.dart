@@ -10,4 +10,12 @@ class JobProvider extends ChangeNotifier {
           (element) => element.isPopular = true,
         );
   }
+
+  void bookmark(int id) {
+    final job = jobs.firstWhere((element) => element.id == id);
+
+    job.isBookmarked = !job.isBookmarked;
+
+    notifyListeners();
+  }
 }

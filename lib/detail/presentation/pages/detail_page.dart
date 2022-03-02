@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_job_seeker/detail/detail.dart';
+import 'package:flutter_job_seeker/core/presentation/provider/job_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/core.dart';
 import '../../../home/home.dart';
+import '../../detail.dart';
 
 class DetailPage extends StatefulWidget {
-  final JobEntity job;
+  final int jobId;
 
   const DetailPage({
     Key? key,
-    required this.job,
+    required this.jobId,
   }) : super(key: key);
 
   @override
@@ -22,58 +24,52 @@ class _DetailPageState extends State<DetailPage>
   late Size _screen;
   late ThemeData _theme;
 
-  late final List<JobCategoryEntity> jobCategories;
-
-  late final TabController _tabController;
-
-  @override
-  void initState() {
-    jobCategories = [
-      widget.job.timeStatus,
-      widget.job.locationStatus,
-    ];
-
-    _tabController = TabController(
-      length: 2,
-      vsync: this,
-    );
-
-    super.initState();
-  }
+  late final TabController _tabController = TabController(
+    length: 2,
+    vsync: this,
+  );
 
   @override
   Widget build(BuildContext context) {
     _screen = MediaQuery.of(context).size;
     _theme = Theme.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        flexibleSpace: _appBarContent(),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-      ),
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            if (_screen.width < 800)
-              SliverAppBar(
-                automaticallyImplyLeading: false,
-                elevation: 0,
-                backgroundColor: Colors.transparent,
-                expandedHeight: 312,
-                flexibleSpace: FlexibleSpaceBar(
-                  background: _flexibleWidget(),
-                ),
-              )
-          ];
-        },
-        body: _mainWidget(),
-      ),
+    return Consumer<JobProvider>(
+      builder: (context, value, child) {
+        final job = value.jobs.firstWhere(
+          (element) => element.id == widget.jobId,
+        );
+
+        return Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            flexibleSpace: _appBarContent(job),
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+          ),
+          body: NestedScrollView(
+            headerSliverBuilder: (context, innerBoxIsScrolled) {
+              return [
+                if (_screen.width < 800)
+                  SliverAppBar(
+                    automaticallyImplyLeading: false,
+                    elevation: 0,
+                    backgroundColor: Colors.transparent,
+                    expandedHeight: 312,
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: _flexibleWidget(job),
+                    ),
+                  )
+              ];
+            },
+            body: _mainWidget(job),
+          ),
+        );
+      },
     );
   }
 
-  Widget _appBarContent() {
+  Widget _appBarContent(JobEntity jobEntity) {
     return Container(
       height: AppBar().preferredSize.height,
       margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
@@ -110,14 +106,22 @@ class _DetailPageState extends State<DetailPage>
           const SizedBox(
             width: 16,
           ),
-          CustomIconButton(
-            width: 40,
-            height: 40,
-            onTap: () {},
-            icon: SvgPicture.asset(
-              AppIcons.icBookmark,
-              width: 24,
-              height: 24,
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            child: CustomIconButton(
+              width: 40,
+              height: 40,
+              onTap: () {
+                Provider.of<JobProvider>(context, listen: false)
+                    .bookmark(widget.jobId);
+              },
+              backgroundColor: jobEntity.isBookmarked ? Colors.redAccent : null,
+              icon: SvgPicture.asset(
+                AppIcons.icBookmark,
+                width: 24,
+                height: 24,
+                color: jobEntity.isBookmarked ? AppColors.white : null,
+              ),
             ),
           ),
         ],
@@ -125,7 +129,13 @@ class _DetailPageState extends State<DetailPage>
     );
   }
 
-  Widget _flexibleWidget() {
+  Widget _flexibleWidget(JobEntity jobEntity) {
+    final _jobCategories = [
+      jobEntity.timeStatus,
+      jobEntity.locationStatus,
+      ...jobEntity.categories,
+    ];
+
     return Container(
       padding: const EdgeInsets.symmetric(
         vertical: 56,
@@ -133,7 +143,7 @@ class _DetailPageState extends State<DetailPage>
       child: Column(
         children: [
           CustomImageNetwork(
-            widget.job.company.logo,
+            jobEntity.company.logo,
             height: 100,
             width: 100,
           ),
@@ -141,7 +151,7 @@ class _DetailPageState extends State<DetailPage>
             height: 16,
           ),
           Text(
-            widget.job.name,
+            jobEntity.name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
@@ -153,7 +163,7 @@ class _DetailPageState extends State<DetailPage>
             height: 4,
           ),
           Text(
-            widget.job.company.location,
+            jobEntity.company.location,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
@@ -170,7 +180,7 @@ class _DetailPageState extends State<DetailPage>
               scrollDirection: Axis.horizontal,
               shrinkWrap: true,
               itemBuilder: (context, index) {
-                final category = jobCategories[index];
+                final category = _jobCategories[index];
 
                 return ItemJobCategory(
                   jobCategory: category,
@@ -181,7 +191,7 @@ class _DetailPageState extends State<DetailPage>
                   width: 8,
                 );
               },
-              itemCount: jobCategories.length,
+              itemCount: _jobCategories.length,
             ),
           ),
         ],
@@ -189,7 +199,7 @@ class _DetailPageState extends State<DetailPage>
     );
   }
 
-  Widget _mainWidget() {
+  Widget _mainWidget(JobEntity jobEntity) {
     return Container(
         padding:
             EdgeInsets.fromLTRB(24, _screen.width >= 800 ? 24 : 32, 24, 24),
@@ -207,7 +217,7 @@ class _DetailPageState extends State<DetailPage>
             if (_screen.width >= 800)
               Expanded(
                 flex: 2,
-                child: _flexibleWidget(),
+                child: _flexibleWidget(jobEntity),
               ),
             Expanded(
               flex: 3,
@@ -275,10 +285,10 @@ class _DetailPageState extends State<DetailPage>
                         controller: _tabController,
                         children: [
                           DetailDescriptionScreen(
-                            job: widget.job,
+                            job: jobEntity,
                           ),
                           DetailCompanyScreen(
-                            job: widget.job,
+                            job: jobEntity,
                           ),
                         ],
                       ),
