@@ -125,12 +125,18 @@ class _HomeBasePageState extends State<HomeBasePage>
                     _isDrawerExpanded = !_isDrawerExpanded;
                   });
                 },
-                title: SvgPicture.asset(
-                  AppIcons.icCategory,
-                  width: 24,
-                  height: 24,
-                  color: AppColors.grey,
-                ),
+                title: _isDrawerExpanded
+                    ? const Icon(
+                        Icons.close_rounded,
+                        size: 28,
+                        color: AppColors.grey,
+                      )
+                    : SvgPicture.asset(
+                        AppIcons.icCategory,
+                        width: 24,
+                        height: 24,
+                        color: AppColors.grey,
+                      ),
               ),
             ),
             const Divider(
