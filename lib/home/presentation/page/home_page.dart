@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -59,21 +58,20 @@ class _HomePageState extends State<HomePage> {
                   behavior: const ScrollBehavior().copyWith(
                     overscroll: false,
                   ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        if (_isSearchJob)
-                          _searchJobWidget()
-                        else ...[
-                          _popularJobWidget(),
-                          const SizedBox(
+                  child: CustomScrollView(
+                    slivers: [
+                      if (_isSearchJob)
+                        _searchJobWidget()
+                      else ...[
+                        _popularJobWidget(),
+                        const SliverToBoxAdapter(
+                          child: SizedBox(
                             height: 8,
                           ),
-                          _recommendationJobWidget(),
-                        ],
+                        ),
+                        ..._recommendationJobWidget(),
                       ],
-                    ),
+                    ],
                   ),
                 ),
               ),
@@ -193,6 +191,7 @@ class _HomePageState extends State<HomePage> {
                     child: TextField(
                       controller: _searchController,
                       maxLines: 1,
+                      textInputAction: TextInputAction.search,
                       decoration: const InputDecoration(
                         hintText: AppStrings.homeSearchHint,
                         border: InputBorder.none,
@@ -202,13 +201,20 @@ class _HomePageState extends State<HomePage> {
                         _searchDebounce?.cancel();
 
                         _searchDebounce = Timer(
-                          const Duration(milliseconds: 500),
+                          const Duration(milliseconds: 300),
                           () {
                             setState(() {
                               _isSearchJob = value.trim().isNotEmpty;
                             });
                           },
                         );
+                      },
+                      onSubmitted: (value) {
+                        _searchDebounce?.cancel();
+
+                        setState(() {
+                          _isSearchJob = value.trim().isNotEmpty;
+                        });
                       },
                     ),
                   ),
@@ -240,40 +246,100 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _popularJobWidget() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
+    return SliverToBoxAdapter(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Text(
+              AppStrings.homePopularJob,
+              style: _theme.textTheme.headline6?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Consumer<JobProvider>(
+            builder: (context, value, child) {
+              final _popularJobs = value.jobs
+                  .where(
+                    (element) => element.isPopular,
+                  )
+                  .toList();
+
+              return SizedBox(
+                height: 180,
+                child: ListView.separated(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    final job = _popularJobs[index];
+
+                    return ItemJobPopular(
+                      job: job,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return DetailPage(
+                                jobId: job.id,
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(
+                      width: 16,
+                    );
+                  },
+                  itemCount: _popularJobs.length,
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _recommendationJobWidget() {
+    return [
+      SliverToBoxAdapter(
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Text(
-            AppStrings.homePopularJob,
+            AppStrings.homeRecommendationJob,
             style: _theme.textTheme.headline6?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
-        Consumer<JobProvider>(
-          builder: (context, value, child) {
-            final _popularJobs = value.jobs
-                .where(
-                  (element) => element.isPopular,
-                )
-                .toList();
+      ),
+      Consumer<JobProvider>(
+        builder: (context, value, child) {
+          final _jobs = value.jobs
+              .where(
+                (element) => !element.isPopular,
+              )
+              .toList();
 
-            return SizedBox(
-              height: 180,
-              child: ListView.separated(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 16,
-                ),
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  final job = _popularJobs[index];
+          return SliverPadding(
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+            sliver: SliverGrid(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final job = _jobs[index];
 
-                  return ItemJobPopular(
+                  return ItemJob(
                     job: job,
                     onTap: () {
                       Navigator.push(
@@ -289,77 +355,19 @@ class _HomePageState extends State<HomePage> {
                     },
                   );
                 },
-                separatorBuilder: (context, index) {
-                  return const SizedBox(
-                    width: 16,
-                  );
-                },
-                itemCount: _popularJobs.length,
+                childCount: _jobs.length,
               ),
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _recommendationJobWidget() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Text(
-            AppStrings.homeRecommendationJob,
-            style: _theme.textTheme.headline6?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        Consumer<JobProvider>(
-          builder: (context, value, child) {
-            final _jobs = value.jobs
-                .where(
-                  (element) => !element.isPopular,
-                )
-                .toList();
-
-            return GridView.builder(
-              itemCount: _jobs.length,
-              shrinkWrap: true,
-              physics: ScrollPhysics(),
-              padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 236,
                 mainAxisSpacing: 16,
                 crossAxisSpacing: 16,
                 mainAxisExtent: 124,
               ),
-              itemBuilder: (context, index) {
-                final job = _jobs[index];
-
-                return ItemJob(
-                  job: job,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return DetailPage(
-                            jobId: job.id,
-                          );
-                        },
-                      ),
-                    );
-                  },
-                );
-              },
-            );
-          },
-        ),
-      ],
-    );
+            ),
+          );
+        },
+      ),
+    ];
   }
 
   Widget _searchJobWidget() {
@@ -383,36 +391,38 @@ class _HomePageState extends State<HomePage> {
           },
         ).toList();
 
-        return GridView.builder(
-          itemCount: _jobs.length,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
+        return SliverPadding(
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 400,
-            mainAxisSpacing: 16,
-            crossAxisSpacing: 16,
-            mainAxisExtent: 148,
-          ),
-          itemBuilder: (context, index) {
-            final job = _jobs[index];
+          sliver: SliverGrid(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final job = _jobs[index];
 
-            return ItemJobPopular(
-              job: job,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return DetailPage(
-                        jobId: job.id,
-                      );
-                    },
-                  ),
+                return ItemJobPopular(
+                  job: job,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return DetailPage(
+                            jobId: job.id,
+                          );
+                        },
+                      ),
+                    );
+                  },
                 );
               },
-            );
-          },
+              childCount: _jobs.length,
+            ),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 400,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+              mainAxisExtent: 148,
+            ),
+          ),
         );
       },
     );
