@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'core/constant/theme.dart';
 import 'core/presentation/provider/job_provider.dart';
-import 'intro/intro.dart';
+import 'feature/feature.dart';
 
 void main() {
   runApp(const MyApp());

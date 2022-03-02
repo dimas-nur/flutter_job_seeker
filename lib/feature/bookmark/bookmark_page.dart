@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-import '../core/core.dart';
+import '../../core/core.dart';
 import '../detail/detail.dart';
 import '../home/home.dart';
 
@@ -20,6 +20,7 @@ class _BookmarkPageState extends State<BookmarkPage> {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
           AppStrings.bookmarkTittle,
           style: _theme.textTheme.bodyText1?.copyWith(

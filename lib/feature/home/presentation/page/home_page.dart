@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/core.dart';
-import '../../../core/presentation/provider/job_provider.dart';
+import '../../../../core/core.dart';
 import '../../../detail/presentation/pages/detail_page.dart';
 import '../presentation.dart';
 

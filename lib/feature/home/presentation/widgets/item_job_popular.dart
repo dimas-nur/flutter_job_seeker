@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_job_seeker/home/presentation/presentation.dart';
 
-import '../../../core/core.dart';
+import '../../../../core/core.dart';
+import 'widgets.dart';
 
 class ItemJobPopular extends StatelessWidget {
   final JobEntity job;

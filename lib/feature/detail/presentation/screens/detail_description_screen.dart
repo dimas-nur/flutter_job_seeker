@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/core.dart';
+import '../../../../core/core.dart';
 
 class DetailDescriptionScreen extends StatefulWidget {
   final JobEntity job;

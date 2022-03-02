@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_job_seeker/core/core.dart';
-import 'package:flutter_job_seeker/core/data/data.dart';
+
+import '../../../../core/core.dart';
 
 class DetailCompanyScreen extends StatefulWidget {
   final JobEntity job;

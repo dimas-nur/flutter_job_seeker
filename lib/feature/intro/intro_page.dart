@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_job_seeker/home/home.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../core/core.dart';
+import '../../core/core.dart';
 
 class IntroPage extends StatefulWidget {
   const IntroPage({Key? key}) : super(key: key);
