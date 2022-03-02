@@ -19,6 +19,7 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage>
     with SingleTickerProviderStateMixin {
+  late Size _screen;
   late ThemeData _theme;
 
   late final List<JobCategoryEntity> jobCategories;
@@ -42,6 +43,7 @@ class _DetailPageState extends State<DetailPage>
 
   @override
   Widget build(BuildContext context) {
+    _screen = MediaQuery.of(context).size;
     _theme = Theme.of(context);
 
     return Scaffold(
@@ -54,15 +56,16 @@ class _DetailPageState extends State<DetailPage>
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
-            SliverAppBar(
-              automaticallyImplyLeading: false,
-              elevation: 0,
-              backgroundColor: Colors.transparent,
-              expandedHeight: 312,
-              flexibleSpace: FlexibleSpaceBar(
-                background: _flexibleWidget(),
-              ),
-            )
+            if (_screen.width < 800)
+              SliverAppBar(
+                automaticallyImplyLeading: false,
+                elevation: 0,
+                backgroundColor: Colors.transparent,
+                expandedHeight: 312,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: _flexibleWidget(),
+                ),
+              )
           ];
         },
         body: _mainWidget(),
@@ -188,74 +191,103 @@ class _DetailPageState extends State<DetailPage>
 
   Widget _mainWidget() {
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(28),
+        padding:
+            EdgeInsets.fromLTRB(24, _screen.width >= 800 ? 24 : 32, 24, 24),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(28),
+          ),
+          boxShadow: [
+            AppProperties.shadow,
+          ],
         ),
-        boxShadow: [
-          AppProperties.shadow,
-        ],
-      ),
-      child: Column(
-        children: [
-          Stack(
-            children: [
-              Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    12,
-                  ),
-                  border: Border.all(
-                    color: AppColors.blueSoft.withOpacity(0.3),
-                  ),
-                ),
+        child: Row(
+          children: [
+            if (_screen.width >= 800)
+              Expanded(
+                flex: 2,
+                child: _flexibleWidget(),
               ),
-              Positioned(
-                child: TabBar(
-                  controller: _tabController,
-                  indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      12,
+            Expanded(
+              flex: 3,
+              child: Container(
+                padding: _screen.width >= 800
+                    ? EdgeInsets.fromLTRB(
+                        24, _screen.width >= 800 ? 24 : 32, 24, 24)
+                    : null,
+                decoration: _screen.width >= 800
+                    ? BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(28),
+                        ),
+                        boxShadow: [
+                          AppProperties.shadow,
+                        ],
+                      )
+                    : null,
+                child: Column(
+                  children: [
+                    Stack(
+                      children: [
+                        Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                              12,
+                            ),
+                            border: Border.all(
+                              color: AppColors.blueSoft.withOpacity(0.3),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          child: TabBar(
+                            controller: _tabController,
+                            indicator: BoxDecoration(
+                              borderRadius: BorderRadius.circular(
+                                12,
+                              ),
+                              color: AppColors.primary,
+                            ),
+                            labelColor: AppColors.white,
+                            unselectedLabelColor: AppColors.primary,
+                            tabs: const [
+                              Tab(
+                                height: 48,
+                                text: 'Description',
+                              ),
+                              Tab(
+                                height: 48,
+                                text: 'Company',
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    color: AppColors.primary,
-                  ),
-                  labelColor: AppColors.white,
-                  unselectedLabelColor: AppColors.primary,
-                  tabs: [
-                    Tab(
-                      height: 48,
-                      text: 'Description',
+                    const SizedBox(
+                      height: 24,
                     ),
-                    Tab(
-                      height: 48,
-                      text: 'Company',
+                    Expanded(
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          DetailDescriptionScreen(
+                            job: widget.job,
+                          ),
+                          DetailCompanyScreen(
+                            job: widget.job,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
-          const SizedBox(
-            height: 24,
-          ),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                DetailDescriptionScreen(
-                  job: widget.job,
-                ),
-                DetailCompanyScreen(
-                  job: widget.job,
-                ),
-              ],
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ));
   }
 }
