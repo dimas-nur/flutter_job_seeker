@@ -39,33 +39,100 @@ class _HomePageState extends State<HomePage> {
     _theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: _appBarContent(),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
+      body: SafeArea(
+        child: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return [
+              SliverAppBar(
+                automaticallyImplyLeading: false,
+                elevation: 0,
+                backgroundColor: Colors.transparent,
+                expandedHeight: 108,
+                flexibleSpace: FlexibleSpaceBar(
+                  collapseMode: CollapseMode.pin,
+                  background: _flexibleWidget(),
+                ),
+              )
+            ];
+          },
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _searchWidget(),
+              const SizedBox(
+                height: 16,
+              ),
+              Expanded(
+                child: ScrollConfiguration(
+                  behavior: const ScrollBehavior().copyWith(
+                    overscroll: false,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _popularJobWidget(),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        _recommendationJobWidget(),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.only(
-          top: 12,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _greetingWidget(),
-            const SizedBox(
+    );
+  }
+
+  Widget _flexibleWidget() {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hello Dimas!',
+                  style: _theme.textTheme.bodyText1?.copyWith(
+                    fontSize: 18,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  AppStrings.homeGreeting,
+                  style: _theme.textTheme.headline5?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            width: 16,
+          ),
+          CustomIconButton(
+            onTap: () {},
+            icon: SvgPicture.asset(
+              AppIcons.icNotification,
+              width: 24,
               height: 24,
             ),
-            _searchWidget(),
-            const SizedBox(
-              height: 24,
-            ),
-            _popularJobWidget(),
-            const SizedBox(
-              height: 8,
-            ),
-            _recommendationJobWidget(),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -73,7 +140,6 @@ class _HomePageState extends State<HomePage> {
   Widget _appBarContent() {
     return Container(
       height: AppBar().preferredSize.height,
-      margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -92,32 +158,6 @@ class _HomePageState extends State<HomePage> {
               AppIcons.icNotification,
               width: 24,
               height: 24,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _greetingWidget() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Hello Dimas!',
-            style: _theme.textTheme.bodyText1?.copyWith(
-              fontSize: 18,
-            ),
-          ),
-          const SizedBox(
-            height: 4,
-          ),
-          Text(
-            AppStrings.homeGreeting,
-            style: _theme.textTheme.headline5?.copyWith(
-              fontWeight: FontWeight.bold,
             ),
           ),
         ],
