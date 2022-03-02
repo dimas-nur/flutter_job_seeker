@@ -1,13 +1,12 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_job_seeker/core/presentation/provider/job_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/constant/constant.dart';
 import '../../../core/core.dart';
-import '../../../core/data/data.dart';
-import '../../../core/data/entities/job_entity.dart';
-import '../../../core/presentation/widgets/widgets.dart';
+import '../../../core/presentation/provider/job_provider.dart';
 import '../../../detail/presentation/pages/detail_page.dart';
 import '../presentation.dart';
 
@@ -20,6 +19,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late ThemeData _theme;
+
+  final _searchController = TextEditingController();
+
+  bool _isSearchJob = false;
+
+  Timer? _searchDebounce;
 
   @override
   Widget build(BuildContext context) {
@@ -58,11 +63,15 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        _popularJobWidget(),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        _recommendationJobWidget(),
+                        if (_isSearchJob)
+                          _searchJobWidget()
+                        else ...[
+                          _popularJobWidget(),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          _recommendationJobWidget(),
+                        ],
                       ],
                     ),
                   ),
@@ -180,14 +189,27 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(
                     width: 16,
                   ),
-                  const Expanded(
+                  Expanded(
                     child: TextField(
+                      controller: _searchController,
                       maxLines: 1,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: AppStrings.homeSearchHint,
                         border: InputBorder.none,
                         isCollapsed: true,
                       ),
+                      onChanged: (value) {
+                        _searchDebounce?.cancel();
+
+                        _searchDebounce = Timer(
+                          const Duration(milliseconds: 500),
+                          () {
+                            setState(() {
+                              _isSearchJob = value.trim().isNotEmpty;
+                            });
+                          },
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -306,7 +328,7 @@ class _HomePageState extends State<HomePage> {
             return GridView.builder(
               itemCount: _jobs.length,
               shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
+              physics: ScrollPhysics(),
               padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 236,
@@ -337,6 +359,62 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ],
+    );
+  }
+
+  Widget _searchJobWidget() {
+    final _keyword = _searchController.text.trim();
+
+    return Consumer<JobProvider>(
+      builder: (context, value, child) {
+        final _jobs = value.jobs.where(
+          (job) {
+            final _jobCategories = [
+              job.timeStatus,
+              job.locationStatus,
+              ...job.categories,
+            ].join(' - ');
+
+            return !job.isPopular &&
+                (job.name.contains(_keyword) ||
+                    _jobCategories.contains(_keyword) ||
+                    job.company.name.contains(_keyword) ||
+                    job.company.location.contains(_keyword));
+          },
+        ).toList();
+
+        return GridView.builder(
+          itemCount: _jobs.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 400,
+            mainAxisSpacing: 16,
+            crossAxisSpacing: 16,
+            mainAxisExtent: 148,
+          ),
+          itemBuilder: (context, index) {
+            final job = _jobs[index];
+
+            return ItemJobPopular(
+              job: job,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return DetailPage(
+                        jobId: job.id,
+                      );
+                    },
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
     );
   }
 }

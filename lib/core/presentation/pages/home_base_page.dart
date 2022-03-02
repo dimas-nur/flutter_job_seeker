@@ -114,9 +114,6 @@ class _HomeBasePageState extends State<HomeBasePage>
         ),
         child: Column(
           children: [
-            const SizedBox(
-              height: 24,
-            ),
             Tooltip(
               message: 'Menu',
               child: ListTile(
