@@ -74,7 +74,7 @@ class _IntroPageState extends State<IntroPage> {
       child: Center(
         child: Container(
           margin: paddingSafeArea > 32
-              ? EdgeInsets.fromLTRB(32, paddingSafeArea + 32, 32, 32)
+              ? EdgeInsets.fromLTRB(32, 32, 32, 32)
               : const EdgeInsets.all(32),
           decoration: BoxDecoration(
               color: AppColors.white,
