@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_job_seeker/core/core.dart';
 import 'package:flutter_job_seeker/core/data/entities/job_entity.dart';
 import 'package:flutter_job_seeker/detail/presentation/pages/detail_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -125,7 +126,9 @@ class _HomePageState extends State<HomePage> {
             width: 16,
           ),
           CustomIconButton(
-            onTap: () {},
+            onTap: () {
+              context.showUnderDevelopment();
+            },
             icon: SvgPicture.asset(
               AppIcons.icNotification,
               width: 24,
@@ -213,7 +216,9 @@ class _HomePageState extends State<HomePage> {
             height: 48,
             backgroundColor: AppColors.primary,
             borderRadius: BorderRadius.circular(14),
-            onTap: () {},
+            onTap: () {
+              context.showUnderDevelopment();
+            },
             icon: SvgPicture.asset(
               AppIcons.icFilter,
               width: 24,

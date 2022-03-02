@@ -32,7 +32,7 @@ class UnderDevelopmentScreen extends StatelessWidget {
           ),
           Flexible(
             child: Text(
-              'Opps!',
+              AppStrings.underDevelopmentTitle,
               style: _theme.textTheme.headline5?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: color,
@@ -44,7 +44,7 @@ class UnderDevelopmentScreen extends StatelessWidget {
           ),
           Flexible(
             child: Text(
-              'Under Construction',
+              AppStrings.underDevelopmentDescription,
               style: _theme.textTheme.bodyText1?.copyWith(
                 fontSize: 18,
                 color: color,

@@ -12,4 +12,12 @@ class AppStrings {
 
   /* Detail Page */
   static const detailTittle = 'Job detail';
+
+  /* Under Development Screen */
+  static const underDevelopmentTitle = 'Opps!';
+  static const underDevelopmentDescription = 'Under Construction';
+
+  /* Other */
+  static const dialogUnderDevelopment =
+      "Sorry, this feature isn't available right now";
 }
