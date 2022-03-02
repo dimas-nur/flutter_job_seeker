@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
                 automaticallyImplyLeading: false,
                 elevation: 0,
                 backgroundColor: Colors.transparent,
-                expandedHeight: 108,
+                expandedHeight: 84,
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin,
                   background: _flexibleWidget(),
@@ -50,9 +50,6 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _searchWidget(),
-              const SizedBox(
-                height: 16,
-              ),
               Expanded(
                 child: ScrollConfiguration(
                   behavior: const ScrollBehavior().copyWith(
@@ -84,7 +81,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _flexibleWidget() {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,115 +130,113 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _appBarContent() {
-    return Container(
-      height: AppBar().preferredSize.height,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          CustomIconButton(
-            onTap: () {},
-            icon: SvgPicture.asset(
-              AppIcons.icCategory,
-              width: 24,
-              height: 24,
-            ),
-          ),
-          CustomIconButton(
-            onTap: () {},
-            icon: SvgPicture.asset(
-              AppIcons.icNotification,
-              width: 24,
-              height: 24,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _searchWidget() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              height: 48,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(14),
-                boxShadow: [
-                  AppProperties.shadow,
-                ],
-              ),
-              child: Row(
-                children: [
-                  SvgPicture.asset(
-                    AppIcons.icSearch,
-                    width: 24,
-                    height: 24,
+    return StatefulBuilder(
+      builder: (context, localSetState) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 48,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: [
+                      AppProperties.shadow,
+                    ],
                   ),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  Expanded(
-                    child: TextField(
-                      controller: _searchController,
-                      maxLines: 1,
-                      textInputAction: TextInputAction.search,
-                      decoration: const InputDecoration(
-                        hintText: AppStrings.homeSearchHint,
-                        border: InputBorder.none,
-                        isCollapsed: true,
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        AppIcons.icSearch,
+                        width: 24,
+                        height: 24,
                       ),
-                      onChanged: (value) {
-                        _searchDebounce?.cancel();
+                      const SizedBox(
+                        width: 16,
+                      ),
+                      Expanded(
+                        child: TextField(
+                          controller: _searchController,
+                          maxLines: 1,
+                          textInputAction: TextInputAction.search,
+                          decoration: const InputDecoration(
+                            hintText: AppStrings.homeSearchHint,
+                            border: InputBorder.none,
+                            isCollapsed: true,
+                          ),
+                          onChanged: (value) {
+                            _searchDebounce?.cancel();
 
-                        _searchDebounce = Timer(
-                          const Duration(milliseconds: 300),
-                          () {
+                            _searchDebounce = Timer(
+                              const Duration(milliseconds: 300),
+                              () {
+                                setState(() {
+                                  _isSearchJob = value.trim().isNotEmpty;
+                                });
+                              },
+                            );
+
+                            localSetState(() {});
+                          },
+                          onSubmitted: (value) {
+                            _searchDebounce?.cancel();
+
                             setState(() {
                               _isSearchJob = value.trim().isNotEmpty;
                             });
                           },
-                        );
-                      },
-                      onSubmitted: (value) {
-                        _searchDebounce?.cancel();
+                        ),
+                      ),
+                      if (_searchController.text.trim().isNotEmpty) ...[
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            _searchDebounce?.cancel();
 
-                        setState(() {
-                          _isSearchJob = value.trim().isNotEmpty;
-                        });
-                      },
-                    ),
+                            setState(() {
+                              _searchController.clear();
+                              _isSearchJob = false;
+                            });
+                          },
+                          child: const Icon(
+                            Icons.close_rounded,
+                            size: 24,
+                            color: AppColors.grey,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
+              const SizedBox(
+                width: 16,
+              ),
+              CustomIconButton(
+                width: 48,
+                height: 48,
+                backgroundColor: AppColors.primary,
+                borderRadius: BorderRadius.circular(14),
+                onTap: () {
+                  context.showUnderDevelopment();
+                },
+                icon: SvgPicture.asset(
+                  AppIcons.icFilter,
+                  width: 24,
+                  height: 24,
+                  color: AppColors.white,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(
-            width: 16,
-          ),
-          CustomIconButton(
-            width: 48,
-            height: 48,
-            backgroundColor: AppColors.primary,
-            borderRadius: BorderRadius.circular(14),
-            onTap: () {
-              context.showUnderDevelopment();
-            },
-            icon: SvgPicture.asset(
-              AppIcons.icFilter,
-              width: 24,
-              height: 24,
-              color: AppColors.white,
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -384,10 +379,16 @@ class _HomePageState extends State<HomePage> {
             ].join(' - ');
 
             return !job.isPopular &&
-                (job.name.contains(_keyword) ||
-                    _jobCategories.contains(_keyword) ||
-                    job.company.name.contains(_keyword) ||
-                    job.company.location.contains(_keyword));
+                (job.name.toLowerCase().contains(_keyword.toLowerCase()) ||
+                    _jobCategories
+                        .toLowerCase()
+                        .contains(_keyword.toLowerCase()) ||
+                    job.company.name
+                        .toLowerCase()
+                        .contains(_keyword.toLowerCase()) ||
+                    job.company.location
+                        .toLowerCase()
+                        .contains(_keyword.toLowerCase()));
           },
         ).toList();
 
