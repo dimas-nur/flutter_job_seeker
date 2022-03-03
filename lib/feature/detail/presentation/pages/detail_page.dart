@@ -201,8 +201,12 @@ class _DetailPageState extends State<DetailPage>
 
   Widget _mainWidget(JobEntity jobEntity) {
     return Container(
-        padding:
-            EdgeInsets.fromLTRB(24, _screen.width >= 800 ? 24 : 32, 24, 24),
+        padding: EdgeInsets.fromLTRB(
+          24,
+          _screen.width >= 800 ? 24 : 32,
+          24,
+          _screen.width >= 800 ? 24 : 0,
+        ),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: const BorderRadius.vertical(
@@ -224,14 +228,13 @@ class _DetailPageState extends State<DetailPage>
               child: Container(
                 padding: _screen.width >= 800
                     ? EdgeInsets.fromLTRB(
-                        24, _screen.width >= 800 ? 24 : 32, 24, 24)
+                        24, _screen.width >= 800 ? 24 : 32, 24, 0)
                     : null,
                 decoration: _screen.width >= 800
                     ? BoxDecoration(
                         color: AppColors.white,
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(28),
-                        ),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(28)),
                         boxShadow: [
                           AppProperties.shadow,
                         ],

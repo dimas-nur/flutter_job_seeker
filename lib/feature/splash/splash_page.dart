@@ -24,7 +24,7 @@ class _SplashPageState extends State<SplashPage> {
           context,
           MaterialPageRoute(
             builder: ((context) =>
-                _isFirstLoad ? const IntroPage() : const HomePage()),
+                _isFirstLoad ? const IntroPage() : const HomeBasePage()),
           ),
         );
       },
