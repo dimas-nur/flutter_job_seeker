@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../core/core.dart';
+import '../../core/core.dart';
 
 class IntroPage extends StatefulWidget {
   const IntroPage({Key? key}) : super(key: key);
@@ -11,16 +12,38 @@ class IntroPage extends StatefulWidget {
 }
 
 class _IntroPageState extends State<IntroPage> {
+  late ThemeData theme;
+
+  void _navigate() async {
+    final _prefs = await SharedPreferences.getInstance();
+
+    await _prefs.setBool(AppKeys.prefsIntro, false);
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return const HomeBasePage();
+        },
+      ),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    theme = Theme.of(context);
+
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return constraints.maxWidth > 600 || constraints.maxHeight > 1080
-              ? _bodyWeb()
-              : _bodyMobile();
-        },
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return constraints.maxWidth > 600 || constraints.maxHeight > 1080
+                ? _bodyWeb()
+                : _bodyMobile();
+          },
+        ),
       ),
     );
   }
@@ -41,7 +64,7 @@ class _IntroPageState extends State<IntroPage> {
         Padding(
           padding: const EdgeInsets.all(24),
           child: CustomPrimaryButton(
-            onPressed: () {},
+            onPressed: _navigate,
             text: 'Get Started',
           ),
         ),
@@ -57,7 +80,7 @@ class _IntroPageState extends State<IntroPage> {
       child: Center(
         child: Container(
           margin: paddingSafeArea > 32
-              ? EdgeInsets.fromLTRB(32, paddingSafeArea + 32, 32, 32)
+              ? EdgeInsets.fromLTRB(32, 32, 32, 32)
               : const EdgeInsets.all(32),
           decoration: BoxDecoration(
               color: AppColors.white,
@@ -111,9 +134,9 @@ class _IntroPageState extends State<IntroPage> {
           Flexible(
             child: Text(
               AppStrings.introTitle,
-              style: Theme.of(context).textTheme.headline5?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: theme.textTheme.headline5?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
             ),
@@ -124,7 +147,7 @@ class _IntroPageState extends State<IntroPage> {
           Flexible(
             child: Text(
               AppStrings.introDescription,
-              style: Theme.of(context).textTheme.subtitle1,
+              style: theme.textTheme.subtitle1,
               overflow: TextOverflow.ellipsis,
               maxLines: 4,
             ),
