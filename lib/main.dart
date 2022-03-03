@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         title: 'Job Seeker',
         theme: AppTheme.of(context),
         debugShowCheckedModeBanner: false,
-        home: const IntroPage(),
+        home: const SplashPage(),
       ),
     );
   }

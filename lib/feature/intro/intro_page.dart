@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/core.dart';
 
@@ -12,6 +13,22 @@ class IntroPage extends StatefulWidget {
 
 class _IntroPageState extends State<IntroPage> {
   late ThemeData theme;
+
+  void _navigate() async {
+    final _prefs = await SharedPreferences.getInstance();
+
+    await _prefs.setBool(AppKeys.prefsIntro, false);
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return const HomeBasePage();
+        },
+      ),
+      (route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,17 +64,7 @@ class _IntroPageState extends State<IntroPage> {
         Padding(
           padding: const EdgeInsets.all(24),
           child: CustomPrimaryButton(
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return const HomeBasePage();
-                  },
-                ),
-                (route) => false,
-              );
-            },
+            onPressed: _navigate,
             text: 'Get Started',
           ),
         ),

@@ -11,6 +11,10 @@ class AppIllustrations {
 class AppIcons {
   static const _icons = '$_assets/icons';
 
+  static const appIcon = '$_icons/app_icon.png';
+
+  static const icDicoding = '$_icons/ic_dicoding.svg';
+
   static const icMenuHome = '$_icons/ic_menu_home.svg';
   static const icMenuBookmark = '$_icons/ic_menu_bookmark.svg';
   static const icMenuMessage = '$_icons/ic_menu_message.svg';
